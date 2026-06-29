@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffdf20">
+    <meta name="description" content="Website informasi, dokumentasi, dan program kerja KKN.">
+    <title>@yield('title', 'Beranda') — KKN Karya Nyata</title>
+    @fonts
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @yield('styles')
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Lewati ke konten</a>
+
+    <div class="top-ticker" aria-label="Informasi singkat">
+        <div class="ticker-track">
+            <span>KOLABORASI</span><i class="fa-solid fa-star"></i>
+            <span>BERDAYA BERSAMA</span><i class="fa-solid fa-face-smile"></i>
+            <span>KARYA NYATA UNTUK DESA</span><i class="fa-solid fa-bolt"></i>
+            <span>KOLABORASI</span><i class="fa-solid fa-star"></i>
+            <span>BERDAYA BERSAMA</span><i class="fa-solid fa-face-smile"></i>
+            <span>KARYA NYATA UNTUK DESA</span><i class="fa-solid fa-bolt"></i>
+        </div>
+    </div>
+
+    <header class="site-header">
+        <nav class="navbar navbar-expand-xl" aria-label="Navigasi utama">
+            <div class="container">
+                <a class="navbar-brand" href="{{ route('home') }}" aria-label="KKN Karya Nyata - Beranda">
+                    <span class="brand-mark"><i class="fa-solid fa-hand-fist"></i></span>
+                    <span>KKN<span class="brand-dot">.</span>KARYA</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Buka navigasi">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto align-items-xl-center">
+                        <li class="nav-item"><a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">Beranda</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle {{ request()->routeIs('profil-*') ? 'active' : '' }}" href="#" role="button" data-bs-toggle="dropdown">Tentang</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ route('profil-desa') }}"><i class="fa-solid fa-map-location-dot"></i> Profil Desa</a></li>
+                                <li><a class="dropdown-item" href="{{ route('profil-kelompok') }}"><i class="fa-solid fa-people-group"></i> Tim KKN</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item"><a class="nav-link {{ request()->routeIs('program-kerja*') ? 'active' : '' }}" href="{{ route('program-kerja') }}">Program</a></li>
+                        <li class="nav-item"><a class="nav-link {{ request()->routeIs('artikel*') ? 'active' : '' }}" href="{{ route('artikel') }}">Cerita</a></li>
+                        <li class="nav-item"><a class="nav-link {{ request()->routeIs('galeri') ? 'active' : '' }}" href="{{ route('galeri') }}">Galeri</a></li>
+                        <li class="nav-item"><a class="nav-link {{ request()->routeIs('timeline*') ? 'active' : '' }}" href="{{ route('timeline') }}">Timeline</a></li>
+                        @if(session('firebase_token'))
+                            <li class="nav-item ms-xl-2">
+                                <a class="btn btn-dark nav-cta" href="{{ route('admin.dashboard') }}"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+                            </li>
+                        @endif
+                        <li class="nav-item ms-xl-2">
+                            <a class="btn btn-primary nav-cta" href="{{ route('kontak') }}"><i class="fa-solid fa-paper-plane"></i> Kontak</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        @yield('content')
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-shape footer-shape-one" aria-hidden="true"></div>
+        <div class="footer-shape footer-shape-two" aria-hidden="true"></div>
+        <div class="container position-relative">
+            <div class="footer-lead">
+                <p class="eyebrow light">KKN • KARYA NYATA</p>
+                <h2>Bergerak bersama,<br><span>bertumbuh bersama.</span></h2>
+                <a href="{{ route('kontak') }}" class="btn btn-warning btn-lg">Mari Terhubung <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+            </div>
+            <div class="row g-4 footer-grid">
+                <div class="col-lg-5">
+                    <a class="footer-brand" href="{{ route('home') }}">KKN<span>.</span>KARYA</a>
+                    <p>Ruang digital untuk merekam proses, berbagi cerita, dan menunjukkan dampak program KKN bagi masyarakat desa.</p>
+                </div>
+                <div class="col-6 col-lg-2 offset-lg-1">
+                    <h3>Jelajahi</h3>
+                    <a href="{{ route('profil-desa') }}">Profil Desa</a>
+                    <a href="{{ route('program-kerja') }}">Program Kerja</a>
+                    <a href="{{ route('artikel') }}">Artikel</a>
+                    <a href="{{ route('galeri') }}">Galeri</a>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h3>Lainnya</h3>
+                    <a href="{{ route('profil-kelompok') }}">Tim KKN</a>
+                    <a href="{{ route('timeline') }}">Timeline</a>
+                    <a href="{{ route('kontak') }}">Kontak</a>
+                    <a href="{{ route('login') }}">Admin</a>
+                </div>
+                <div class="col-lg-2">
+                    <h3>Sosial</h3>
+                    <div class="social-links">
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                        <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© {{ date('Y') }} KKN Karya Nyata.</p>
+                <p>Dibuat dengan <i class="fa-solid fa-heart"></i> untuk desa.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @yield('scripts')
+</body>
+</html>
