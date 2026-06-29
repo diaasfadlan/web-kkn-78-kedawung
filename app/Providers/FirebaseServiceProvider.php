@@ -182,7 +182,7 @@ class FirebaseServiceProvider extends ServiceProvider
     private function httpOptions(array $overrides = []): array
     {
         return array_replace([
-            'verify' => false,
+            'verify' => $this->app->environment('local') ? false : true,
             'connect_timeout' => config('firebase.connect_timeout', 8),
             'timeout' => max(
                 config('firebase.request_timeout', 5),
