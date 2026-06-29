@@ -17,16 +17,6 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        $exceptions->reportable(function (\Throwable $exception): void {
-            error_log(sprintf(
-                '[laravel] %s: %s in %s:%d',
-                $exception::class,
-                $exception->getMessage(),
-                $exception->getFile(),
-                $exception->getLine(),
-            ));
-        });
-
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*'),
         );

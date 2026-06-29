@@ -3,3 +3,4 @@
 node_modules
 vendor
 storage/app/firebase-credentials.json
+bootstrap/cache/*.php
