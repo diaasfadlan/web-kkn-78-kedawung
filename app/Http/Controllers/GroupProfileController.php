@@ -191,4 +191,98 @@ class GroupProfileController extends Controller
 
         return $this->mediaStorage->uploadPublicFile($file, 'members', 'member');
     }
+
+    /**
+     * Show form for editing group identity (group_profile) and lecturer (lecturers)
+     */
+    public function setting(): View
+    {
+        $group = $this->firebase->getDocument('group_profile', 'main') ?? [];
+        $lecturer = $this->firebase->getDocument('lecturers', 'main') ?? [];
+
+        return view('admin.group.setting', [
+            'group' => $group,
+            'lecturer' => $lecturer,
+        ]);
+    }
+
+    /**
+     * Update group profile and lecturer information
+     */
+    public function updateSetting(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'group_name' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
+            'period' => 'required|string|max:255',
+            'university' => 'required|string|max:255',
+            'description' => 'required|string',
+            'group_photo' => 'nullable|image',
+            'lecturer_name' => 'nullable|string|max:255',
+            'lecturer_nidn' => 'nullable|string|max:50',
+            'lecturer_department' => 'nullable|string|max:255',
+            'lecturer_photo' => 'nullable|image',
+        ]);
+
+        $group = $this->firebase->getDocument('group_profile', 'main') ?? [];
+        $lecturer = $this->firebase->getDocument('lecturers', 'main') ?? [];
+
+        $newGroupPhoto = null;
+        $newLecturerPhoto = null;
+
+        try {
+            if ($request->hasFile('group_photo')) {
+                $compressed = $this->compressor->compress($request->file('group_photo'));
+                $newGroupPhoto = $this->mediaStorage->uploadPublicFile($compressed, 'group', 'group_banner');
+            }
+
+            if ($request->hasFile('lecturer_photo')) {
+                $compressed = $this->compressor->compress($request->file('lecturer_photo'));
+                $newLecturerPhoto = $this->mediaStorage->uploadPublicFile($compressed, 'lecturers', 'dpl');
+            }
+
+            $groupData = [
+                'name' => $validated['group_name'],
+                'location' => $validated['location'],
+                'period' => $validated['period'],
+                'university' => $validated['university'],
+                'description' => $validated['description'],
+            ];
+
+            if ($newGroupPhoto) {
+                $groupData['photo_url'] = $newGroupPhoto['url'];
+                $groupData['photo_public_id'] = $newGroupPhoto['public_id'];
+            }
+
+            $this->firebase->setDocument('group_profile', 'main', $groupData, true);
+
+            if ($newGroupPhoto) {
+                $this->mediaStorage->deleteUploadedAsset($group['photo_public_id'] ?? null, $group['photo_url'] ?? null);
+            }
+
+            // Update DPL / Lecturer
+            $lecturerData = [
+                'name' => $validated['lecturer_name'] ?? '',
+                'nidn' => $validated['lecturer_nidn'] ?? '',
+                'department' => $validated['lecturer_department'] ?? '',
+            ];
+
+            if ($newLecturerPhoto) {
+                $lecturerData['photo_url'] = $newLecturerPhoto['url'];
+                $lecturerData['photo_public_id'] = $newLecturerPhoto['public_id'];
+            }
+
+            $this->firebase->setDocument('lecturers', 'main', $lecturerData, true);
+
+            if ($newLecturerPhoto) {
+                $this->mediaStorage->deleteUploadedAsset($lecturer['photo_public_id'] ?? null, $lecturer['photo_url'] ?? null);
+            }
+
+            return back()->with('success', 'Profil kelompok dan DPL berhasil diperbarui!');
+        } catch (\Throwable $e) {
+            report($e);
+
+            return back()->withInput()->with('error', 'Gagal memperbarui profil kelompok: '.$e->getMessage());
+        }
+    }
 }

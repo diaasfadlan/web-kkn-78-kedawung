@@ -22,6 +22,16 @@ class MediaStorageService
         $filename = uniqid($prefix.'_', true).'.'.$extension;
         $publicId = trim($directory, '/').'/'.pathinfo($filename, PATHINFO_FILENAME);
 
+        if (! $this->isCloudinaryConfigured()) {
+            $storedPath = Storage::disk('public')->putFileAs(trim($directory, '/'), $file, $filename);
+
+            return [
+                'path' => $storedPath,
+                'public_id' => null,
+                'url' => asset('storage/'.$storedPath),
+            ];
+        }
+
         $response = $this->http->post($this->uploadEndpoint(), [
             'auth' => [
                 $this->apiKey(),
@@ -60,26 +70,35 @@ class MediaStorageService
         ];
     }
 
+    public function isCloudinaryConfigured(): bool
+    {
+        return ! empty($this->cloudName()) && ! empty($this->apiKey()) && ! empty($this->apiSecret());
+    }
+
     public function deleteUploadedAsset(?string $publicId, ?string $url = null): void
     {
-        if ($publicId) {
+        if ($publicId && $this->isCloudinaryConfigured()) {
             $timestamp = time();
             $signature = sha1("public_id={$publicId}&timestamp={$timestamp}{$this->apiSecret()}");
 
-            $this->http->post($this->destroyEndpoint(), [
-                'auth' => [
-                    $this->apiKey(),
-                    $this->apiSecret(),
-                ],
-                'form_params' => [
-                    'public_id' => $publicId,
-                    'timestamp' => $timestamp,
-                    'signature' => $signature,
-                    'api_key' => $this->apiKey(),
-                    'resource_type' => 'image',
-                    'invalidate' => true,
-                ],
-            ]);
+            try {
+                $this->http->post($this->destroyEndpoint(), [
+                    'auth' => [
+                        $this->apiKey(),
+                        $this->apiSecret(),
+                    ],
+                    'form_params' => [
+                        'public_id' => $publicId,
+                        'timestamp' => $timestamp,
+                        'signature' => $signature,
+                        'api_key' => $this->apiKey(),
+                        'resource_type' => 'image',
+                        'invalidate' => true,
+                    ],
+                ]);
+            } catch (\Throwable) {
+                // Ignore remote deletion errors
+            }
 
             return;
         }

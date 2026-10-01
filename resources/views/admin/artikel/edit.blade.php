@@ -72,10 +72,16 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="thumbnail" class="form-label">Thumbnail (Opsional)</label>
+                                <label for="thumbnail" class="form-label">Thumbnail Artikel</label>
+                                @if(!empty($article['thumbnail_url']))
+                                    <div class="mb-3">
+                                        <img src="{{ $article['thumbnail_url'] }}" alt="Thumbnail saat ini" class="img-fluid rounded border shadow-sm" style="max-height: 200px; object-fit: cover;">
+                                        <div class="small text-muted mt-1">Thumbnail saat ini</div>
+                                    </div>
+                                @endif
                                 <input type="file" class="form-control @error('thumbnail') is-invalid @enderror" 
                                        id="thumbnail" name="thumbnail" accept="image/*">
-                                <small class="text-muted">Format: JPG, PNG, GIF. Foto akan otomatis dikompres.</small>
+                                <small class="text-muted">Format: JPG, PNG, GIF, WebP. Kosongkan jika tidak ingin mengganti. Foto akan otomatis dikompres.</small>
                                 @error('thumbnail')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror

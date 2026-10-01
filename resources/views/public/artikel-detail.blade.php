@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
 @section('title', $article['title'] ?? 'Detail Artikel')
+@section('meta_description', \Illuminate\Support\Str::limit(strip_tags($article['content'] ?? ''), 150))
+@if(!empty($article['thumbnail_url']))
+    @section('og_image', $article['thumbnail_url'])
+@endif
 
 @section('content')
 <!-- Hero Section -->
@@ -30,8 +34,8 @@
                     </span>
                 </div>
 
-                <div class="article-content">
-                    <p class="text-justify">{{ $article['content'] ?? 'Konten tidak tersedia' }}</p>
+                <div class="article-content" style="line-height: 1.8; font-size: 1.05rem;">
+                    <p class="text-justify">{!! nl2br(e($article['content'] ?? 'Konten tidak tersedia')) !!}</p>
                 </div>
 
                 @if(!empty($article['gallery']))
@@ -109,18 +113,48 @@
 </section>
 
 <!-- Related Articles -->
+@if(!empty($relatedArticles) && count($relatedArticles) > 0)
 <section class="py-5 bg-light">
     <div class="container">
-        <h3 class="mb-4">Artikel Terkait</h3>
+        <div class="section-heading mb-4">
+            <div>
+                <p class="eyebrow">Rekomendasi bacaan</p>
+                <h3>Artikel Terkait Lainnya</h3>
+            </div>
+        </div>
         <div class="row g-4">
+            @foreach($relatedArticles as $related)
             <div class="col-md-6 col-lg-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <p class="text-muted small">Artikel terkait akan ditampilkan di sini</p>
+                <div class="card h-100 story-list-card shadow-sm border-0">
+                    @if(!empty($related['thumbnail_url']))
+                        <img src="{{ $related['thumbnail_url'] }}" alt="{{ $related['title'] ?? 'Artikel' }}" class="card-img-top" style="height: 190px; object-fit: cover;" loading="lazy">
+                    @else
+                        <div class="bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center" style="height: 190px;">
+                            <i class="fas fa-newspaper fa-2x text-muted"></i>
+                        </div>
+                    @endif
+                    <div class="card-body d-flex flex-column">
+                        <div class="mb-2">
+                            <span class="badge bg-primary">{{ $related['category'] ?? 'Umum' }}</span>
+                            <small class="text-muted ms-2">{{ isset($related['published_at']) ? \Carbon\Carbon::parse($related['published_at'])->format('d M Y') : '' }}</small>
+                        </div>
+                        <h5 class="card-title fw-bold">
+                            <a href="{{ route('artikel.detail', $related['id'] ?? '') }}" class="text-decoration-none text-dark">
+                                {{ \Illuminate\Support\Str::limit($related['title'] ?? 'Artikel', 60) }}
+                            </a>
+                        </h5>
+                        <p class="card-text text-muted small mt-auto">
+                            {{ \Illuminate\Support\Str::limit(strip_tags($related['content'] ?? ''), 90) }}
+                        </p>
+                        <a href="{{ route('artikel.detail', $related['id'] ?? '') }}" class="btn btn-sm btn-outline-primary mt-3 w-100">
+                            Baca Artikel <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
                     </div>
                 </div>
             </div>
+            @endforeach
         </div>
     </div>
 </section>
+@endif
 @endsection

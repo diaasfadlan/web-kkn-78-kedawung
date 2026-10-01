@@ -21,11 +21,13 @@
             <div class="col-md-6">
                 <select class="form-select" id="filter-kategori">
                     <option value="">Semua Kategori</option>
-                    <option value="edukasi">Edukasi</option>
-                    <option value="sosialisasi">Sosialisasi</option>
-                    <option value="gotong-royong">Gotong Royong</option>
-                    <option value="dokumentasi">Dokumentasi</option>
-                    <option value="acara">Acara Khusus</option>
+                    @php
+                        $defaultCategories = ['edukasi', 'sosialisasi', 'gotong-royong', 'dokumentasi', 'acara'];
+                        $allCatOptions = collect(array_merge($defaultCategories, $categories ?? []))->filter()->unique()->values();
+                    @endphp
+                    @foreach($allCatOptions as $cat)
+                        <option value="{{ strtolower($cat) }}">{{ ucfirst($cat) }}</option>
+                    @endforeach
                 </select>
             </div>
         </div>

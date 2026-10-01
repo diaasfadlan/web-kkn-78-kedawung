@@ -92,35 +92,62 @@
 </section>
 
 <!-- Contact Form Section -->
-<section class="py-5 bg-light">
+<section class="py-5 bg-light" id="pesan-section">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-6">
-                <h2 class="text-center mb-4">Kirim Pesan</h2>
-                <form action="#" method="POST">
+                <h2 class="text-center mb-2">Kirim Pesan</h2>
+                <p class="text-center text-muted mb-4">Sampaikan pertanyaan, masukan, atau aspirasi Anda langsung kepada tim KKN kami.</p>
+
+                @if(session('success_message'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="fas fa-check-circle me-2"></i> {{ session('success_message') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+
+                @if(session('error_message'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i> {{ session('error_message') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+
+                @if($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <ul class="mb-0">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+
+                <form action="{{ route('kontak.kirim') }}" method="POST" class="card p-4 shadow-sm border-0">
                     @csrf
                     <div class="mb-3">
-                        <label for="name" class="form-label">Nama Lengkap</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
+                        <label for="name" class="form-label fw-bold">Nama Lengkap *</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
                     </div>
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
+                        <label for="email" class="form-label fw-bold">Email *</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" required>
                     </div>
                     <div class="mb-3">
-                        <label for="phone" class="form-label">No. Telepon</label>
-                        <input type="tel" class="form-control" id="phone" name="phone">
+                        <label for="phone" class="form-label fw-bold">No. Telepon / WhatsApp (Opsional)</label>
+                        <input type="tel" class="form-control" id="phone" name="phone" value="{{ old('phone') }}" placeholder="Contoh: 08123456789">
                     </div>
                     <div class="mb-3">
-                        <label for="subject" class="form-label">Subjek</label>
-                        <input type="text" class="form-control" id="subject" name="subject" required>
+                        <label for="subject" class="form-label fw-bold">Subjek *</label>
+                        <input type="text" class="form-control" id="subject" name="subject" value="{{ old('subject') }}" placeholder="Contoh: Pertanyaan Program Kerja" required>
                     </div>
                     <div class="mb-3">
-                        <label for="message" class="form-label">Pesan</label>
-                        <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                        <label for="message" class="form-label fw-bold">Isi Pesan *</label>
+                        <textarea class="form-control" id="message" name="message" rows="5" placeholder="Tuliskan pesan Anda di sini..." required>{{ old('message') }}</textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100">
-                        <i class="fas fa-paper-plane"></i> Kirim Pesan
+                    <button type="submit" class="btn btn-primary w-100 py-2">
+                        <i class="fas fa-paper-plane me-2"></i> Kirim Pesan
                     </button>
                 </form>
             </div>

@@ -23,7 +23,26 @@ class FirebaseAuthenticate
 
         try {
             $auth = app('firebase.auth');
-            $verifiedIdToken = $auth->verifyIdToken($token);
+            $verifiedIdToken = null;
+
+            try {
+                $verifiedIdToken = $auth->verifyIdToken($token);
+            } catch (\Throwable $e) {
+                // Coba refresh token jika masa berlaku ID token (1 jam) telah habis
+                $refreshToken = $request->session()->get('firebase_refresh_token');
+                if ($refreshToken) {
+                    $signInResult = $auth->signInWithRefreshToken($refreshToken);
+                    $newToken = $signInResult->idToken();
+                    $request->session()->put('firebase_token', $newToken);
+                    if ($signInResult->refreshToken()) {
+                        $request->session()->put('firebase_refresh_token', $signInResult->refreshToken());
+                    }
+                    $verifiedIdToken = $auth->verifyIdToken($newToken);
+                } else {
+                    throw $e;
+                }
+            }
+
             $uid = $verifiedIdToken->claims()->get('sub');
 
             // Store user info in request
@@ -34,8 +53,10 @@ class FirebaseAuthenticate
             ]);
 
             return $next($request);
-        } catch (\Exception $e) {
-            return redirect()->route('login')->with('error', 'Token tidak valid');
+        } catch (\Throwable) {
+            $request->session()->forget(['firebase_token', 'firebase_refresh_token']);
+
+            return redirect()->route('login')->with('error', 'Sesi login telah berakhir. Silakan login kembali.');
         }
     }
 

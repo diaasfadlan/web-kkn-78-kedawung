@@ -37,12 +37,14 @@
                         <li class="nav-item"><a class="nav-link {{ request()->routeIs('program.*') ? 'active' : '' }}" href="{{ route('program.index') }}">Program</a></li>
                         <li class="nav-item"><a class="nav-link {{ request()->routeIs('gallery.*') ? 'active' : '' }}" href="{{ route('gallery.index') }}">Galeri</a></li>
                         <li class="nav-item"><a class="nav-link {{ request()->routeIs('timeline.*') ? 'active' : '' }}" href="{{ route('timeline.index') }}">Timeline</a></li>
-                        <li class="nav-item"><a class="nav-link {{ request()->routeIs('group.*') ? 'active' : '' }}" href="{{ route('group.index') }}">Anggota</a></li>
+                        <li class="nav-item"><a class="nav-link {{ request()->routeIs('group.index', 'group.create', 'group.edit') ? 'active' : '' }}" href="{{ route('group.index') }}">Anggota</a></li>
+                        <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.messages*') ? 'active' : '' }}" href="{{ route('admin.messages') }}"><i class="fa-solid fa-envelope me-1"></i> Pesan</a></li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle {{ request()->routeIs('village.*', 'contact.*') ? 'active' : '' }}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Pengaturan</a>
+                            <a class="nav-link dropdown-toggle {{ request()->routeIs('village.*', 'contact.*', 'group.setting*') ? 'active' : '' }}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Pengaturan</a>
                             <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ route('group.setting') }}"><i class="fa-solid fa-users-gear me-2"></i>Profil Kelompok & DPL</a></li>
                                 <li><a class="dropdown-item" href="{{ route('village.edit', 'main') }}"><i class="fa-solid fa-map-location-dot me-2"></i>Profil Desa</a></li>
-                                <li><a class="dropdown-item" href="{{ route('contact.edit', 'main') }}"><i class="fa-solid fa-address-book me-2"></i>Kontak</a></li>
+                                <li><a class="dropdown-item" href="{{ route('contact.edit', 'main') }}"><i class="fa-solid fa-address-book me-2"></i>Kontak Kelompok</a></li>
                             </ul>
                         </li>
                     </ul>

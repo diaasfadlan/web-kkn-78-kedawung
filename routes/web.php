@@ -24,10 +24,11 @@ Route::get('/artikel/{id}', [PublicController::class, 'artikelDetail'])->name('a
 Route::get('/galeri', [PublicController::class, 'galeri'])->name('galeri');
 Route::get('/timeline', [PublicController::class, 'timeline'])->name('timeline');
 Route::get('/kontak', [PublicController::class, 'kontak'])->name('kontak');
+Route::post('/kontak', [PublicController::class, 'kirimPesan'])->name('kontak.kirim')->middleware('throttle:10,1');
 
 // Auth Routes
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Admin Routes
@@ -39,5 +40,9 @@ Route::middleware(['firebase.auth'])->prefix('admin')->group(function () {
     Route::resource('timeline', TimelineController::class)->names('timeline')->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
     Route::resource('profil-desa', VillageProfileController::class)->names('village')->only(['edit', 'update']);
     Route::resource('profil-kelompok', GroupProfileController::class)->names('group')->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+    Route::get('profil-kelompok-setting', [GroupProfileController::class, 'setting'])->name('group.setting');
+    Route::put('profil-kelompok-setting', [GroupProfileController::class, 'updateSetting'])->name('group.setting.update');
     Route::resource('kontak', ContactController::class)->names('contact')->only(['edit', 'update']);
+    Route::get('pesan', [AdminController::class, 'messages'])->name('admin.messages');
+    Route::delete('pesan/{id}', [AdminController::class, 'destroyMessage'])->name('admin.messages.destroy');
 });

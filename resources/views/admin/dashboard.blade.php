@@ -15,41 +15,60 @@
 <section class="py-5 bg-light">
     <div class="container">
         <div class="row g-4">
-            <div class="col-md-6 col-lg-3">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <i class="fas fa-file-alt text-primary" style="font-size: 2.5rem;"></i>
-                        <h5 class="card-title mt-3">Total Artikel</h5>
-                        <h2 class="text-primary">{{ $stats['total_articles'] ?? 0 }}</h2>
+            <div class="col-md-6 col-lg">
+                <a href="{{ route('artikel.index') }}" class="text-decoration-none text-dark">
+                    <div class="card text-center h-100 shadow-sm border-0">
+                        <div class="card-body">
+                            <i class="fas fa-file-alt text-primary" style="font-size: 2.2rem;"></i>
+                            <h6 class="card-title mt-3 text-muted">Total Artikel</h6>
+                            <h2 class="text-primary mb-0">{{ $stats['total_articles'] ?? 0 }}</h2>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <i class="fas fa-briefcase text-success" style="font-size: 2.5rem;"></i>
-                        <h5 class="card-title mt-3">Program Kerja</h5>
-                        <h2 class="text-success">{{ $stats['total_programs'] ?? 0 }}</h2>
+            <div class="col-md-6 col-lg">
+                <a href="{{ route('program.index') }}" class="text-decoration-none text-dark">
+                    <div class="card text-center h-100 shadow-sm border-0">
+                        <div class="card-body">
+                            <i class="fas fa-briefcase text-success" style="font-size: 2.2rem;"></i>
+                            <h6 class="card-title mt-3 text-muted">Program Kerja</h6>
+                            <h2 class="text-success mb-0">{{ $stats['total_programs'] ?? 0 }}</h2>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <i class="fas fa-images text-info" style="font-size: 2.5rem;"></i>
-                        <h5 class="card-title mt-3">Galeri</h5>
-                        <h2 class="text-info">{{ $stats['total_galleries'] ?? 0 }}</h2>
+            <div class="col-md-6 col-lg">
+                <a href="{{ route('gallery.index') }}" class="text-decoration-none text-dark">
+                    <div class="card text-center h-100 shadow-sm border-0">
+                        <div class="card-body">
+                            <i class="fas fa-images text-info" style="font-size: 2.2rem;"></i>
+                            <h6 class="card-title mt-3 text-muted">Galeri</h6>
+                            <h2 class="text-info mb-0">{{ $stats['total_galleries'] ?? 0 }}</h2>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <i class="fas fa-users text-warning" style="font-size: 2.5rem;"></i>
-                        <h5 class="card-title mt-3">Anggota</h5>
-                        <h2 class="text-warning">{{ $stats['total_members'] ?? 0 }}</h2>
+            <div class="col-md-6 col-lg">
+                <a href="{{ route('group.index') }}" class="text-decoration-none text-dark">
+                    <div class="card text-center h-100 shadow-sm border-0">
+                        <div class="card-body">
+                            <i class="fas fa-users text-warning" style="font-size: 2.2rem;"></i>
+                            <h6 class="card-title mt-3 text-muted">Anggota Tim</h6>
+                            <h2 class="text-warning mb-0">{{ $stats['total_members'] ?? 0 }}</h2>
+                        </div>
                     </div>
-                </div>
+                </a>
+            </div>
+            <div class="col-md-12 col-lg">
+                <a href="{{ route('admin.messages') }}" class="text-decoration-none text-dark">
+                    <div class="card text-center h-100 shadow-sm border-0">
+                        <div class="card-body">
+                            <i class="fas fa-envelope text-danger" style="font-size: 2.2rem;"></i>
+                            <h6 class="card-title mt-3 text-muted">Pesan Masuk</h6>
+                            <h2 class="text-danger mb-0">{{ $stats['total_messages'] ?? 0 }}</h2>
+                        </div>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
@@ -162,9 +181,11 @@
 
         <nav class="admin-quick-strip" aria-label="Menu manajemen cepat">
             <span class="quick-strip-label">Pindah cepat</span>
+            <a href="{{ route('admin.messages') }}"><i class="fa-solid fa-envelope"></i> Pesan Masuk</a>
             <a href="{{ route('gallery.index') }}"><i class="fa-solid fa-images"></i> Galeri</a>
             <a href="{{ route('timeline.index') }}"><i class="fa-solid fa-timeline"></i> Timeline</a>
             <a href="{{ route('group.index') }}"><i class="fa-solid fa-users"></i> Anggota</a>
+            <a href="{{ route('group.setting') }}"><i class="fa-solid fa-users-gear"></i> Profil Kelompok</a>
             <a href="{{ route('village.edit', 'main') }}"><i class="fa-solid fa-map-location-dot"></i> Profil Desa</a>
             <a href="{{ route('contact.edit', 'main') }}"><i class="fa-solid fa-address-book"></i> Kontak</a>
         </nav>

@@ -33,8 +33,12 @@ class AuthController extends Controller
             $signInResult = $this->auth->signInWithEmailAndPassword($request->email, $request->password);
             
             $idToken = $signInResult->idToken();
+            $refreshToken = $signInResult->refreshToken();
             
             $request->session()->put('firebase_token', $idToken);
+            if ($refreshToken) {
+                $request->session()->put('firebase_refresh_token', $refreshToken);
+            }
 
             return redirect()->route('admin.dashboard')->with('success', 'Berhasil login');
         } catch (\Exception $e) {
@@ -46,7 +50,7 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->session()->forget('firebase_token');
+        $request->session()->forget(['firebase_token', 'firebase_refresh_token']);
         return redirect()->route('login')->with('success', 'Berhasil logout');
     }
 }

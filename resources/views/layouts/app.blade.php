@@ -4,7 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#ffdf20">
-    <meta name="description" content="Website informasi, dokumentasi, dan program kerja KKN.">
+    <meta name="description" content="@yield('meta_description', 'Website informasi, dokumentasi, dan program kerja KKN 078 Kedawung.')">
+    <meta property="og:title" content="@yield('title', 'Beranda') — KKN 078 Kedawung">
+    <meta property="og:description" content="@yield('meta_description', 'Website informasi, dokumentasi, dan program kerja KKN 078 Kedawung.')">
+    <meta property="og:image" content="@yield('og_image', asset('images/hero-main.jpg'))">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:type" content="website">
     <title>@yield('title', 'Beranda') — KKN Karya Nyata</title>
     @fonts
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">

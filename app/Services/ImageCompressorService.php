@@ -17,7 +17,7 @@ class ImageCompressorService
 
     public function compress(UploadedFile $file): UploadedFile
     {
-        $image = Image::read($file->getRealPath());
+        $image = Image::decode($file->getRealPath());
 
         $width = $image->width();
         $height = $image->height();
