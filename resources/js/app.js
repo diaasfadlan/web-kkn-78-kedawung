@@ -2,17 +2,25 @@
 const skeleton = document.querySelector('[data-page-skeleton]');
 
 if (skeleton) {
+    let skeletonTimer = null;
     const showSkeleton = () => {
-        document.body.classList.add('is-page-loading');
-        skeleton.setAttribute('aria-hidden', 'false');
+        skeletonTimer = setTimeout(() => {
+            document.body.classList.add('is-page-loading');
+            skeleton.setAttribute('aria-hidden', 'false');
+        }, 150);
     };
     const hideSkeleton = () => {
+        if (skeletonTimer) clearTimeout(skeletonTimer);
         document.body.classList.remove('is-page-loading');
         skeleton.setAttribute('aria-hidden', 'true');
     };
 
-    if (document.readyState === 'complete') requestAnimationFrame(hideSkeleton);
-    else window.addEventListener('load', hideSkeleton, { once: true });
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', hideSkeleton, { once: true });
+    } else {
+        hideSkeleton();
+    }
+    setTimeout(hideSkeleton, 300);
 
     document.addEventListener('click', (event) => {
         const link = event.target.closest('a[href]');

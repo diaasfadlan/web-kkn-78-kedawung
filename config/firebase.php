@@ -21,7 +21,7 @@ return [
     'storage_bucket' => env('FIREBASE_STORAGE_BUCKET', 'website-kkn078.firebasestorage.app'),
 
     // Public reads are cached locally to avoid a network round-trip on every page view.
-    'cache_ttl' => (int) env('FIREBASE_CACHE_TTL', 300),
+    'cache_ttl' => (int) env('FIREBASE_CACHE_TTL', 86400),
 
     // Fail fast when Google APIs cannot be reached, leaving enough time for
     // the application to serve cached data before PHP's execution limit.

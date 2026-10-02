@@ -17,7 +17,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @yield('styles')
 </head>
-<body class="is-page-loading">
+<body>
     <a class="skip-link" href="#main-content">Lewati ke konten</a>
     <x-page-skeleton />
 

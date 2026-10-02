@@ -12,7 +12,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @yield('styles')
 </head>
-<body class="admin-shell bg-light is-page-loading">
+<body class="admin-shell bg-light">
     <a class="skip-link" href="#admin-content">Lewati ke konten</a>
     <x-page-skeleton :admin="true" />
 
