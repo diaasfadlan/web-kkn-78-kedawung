@@ -109,6 +109,7 @@ class GroupProfileController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'nim' => 'required|string|max:20',
             'prodi' => 'required|string',
             'position' => 'required|string',
             'email' => 'nullable|email',
@@ -128,6 +129,7 @@ class GroupProfileController extends Controller
 
             $data = [
                 'name' => $validated['name'],
+                'nim' => $validated['nim'],
                 'prodi' => $validated['prodi'],
                 'position' => $validated['position'],
                 'social_media' => [

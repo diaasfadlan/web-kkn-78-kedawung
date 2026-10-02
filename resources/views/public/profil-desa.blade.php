@@ -6,6 +6,9 @@
 @php
     $defaultMapUrl = 'https://www.google.com/maps?q=Desa%20Kedawung%2C%20Kecamatan%20Susukan%2C%20Kabupaten%20Banjarnegara&output=embed';
     $villageMapUrl = !empty($village['map_url']) ? $village['map_url'] : $defaultMapUrl;
+    if (str_contains($villageMapUrl, 'google.com/maps') && !str_contains($villageMapUrl, 'output=embed') && !str_contains($villageMapUrl, '/embed')) {
+        $villageMapUrl .= (str_contains($villageMapUrl, '?') ? '&' : '?') . 'output=embed';
+    }
 @endphp
 
 <!-- Hero Section -->

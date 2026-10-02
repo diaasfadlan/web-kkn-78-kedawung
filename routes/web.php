@@ -44,5 +44,6 @@ Route::middleware(['firebase.auth'])->prefix('admin')->group(function () {
     Route::put('profil-kelompok-setting', [GroupProfileController::class, 'updateSetting'])->name('group.setting.update');
     Route::resource('kontak', ContactController::class)->names('contact')->only(['edit', 'update']);
     Route::get('pesan', [AdminController::class, 'messages'])->name('admin.messages');
+    Route::put('pesan/{id}/toggle-read', [AdminController::class, 'toggleMessageRead'])->name('admin.messages.toggle-read');
     Route::delete('pesan/{id}', [AdminController::class, 'destroyMessage'])->name('admin.messages.destroy');
 });

@@ -111,9 +111,9 @@
                 <div class="col-lg-2">
                     <h3>Sosial</h3>
                     <div class="social-links">
-                        <a href="https://www.instagram.com/kkn.078.kedawung/" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="https://www.tiktok.com/@kkn.078.kedawung" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-                        <a href="https://wa.me/6282323697842" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        <a href="{{ !empty($siteContact['instagram']) ? $siteContact['instagram'] : 'https://www.instagram.com/kkn.078.kedawung/' }}" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="{{ !empty($siteContact['tiktok']) ? $siteContact['tiktok'] : 'https://www.tiktok.com/@kkn.078.kedawung' }}" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                        <a href="@waUrl(!empty($siteContact['whatsapp']) ? $siteContact['whatsapp'] : (!empty($siteContact['phone']) ? $siteContact['phone'] : '6282323697842'))" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
                     </div>
                 </div>
             </div>

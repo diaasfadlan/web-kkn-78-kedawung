@@ -38,6 +38,13 @@ class ImageCompressorService
             $quality -= 10;
         } while ($quality >= self::MIN_QUALITY);
 
+        // ponytail: clean up temp file after request completes to prevent disk clutter
+        register_shutdown_function(static function () use ($tempPath): void {
+            if (file_exists($tempPath)) {
+                @unlink($tempPath);
+            }
+        });
+
         return new UploadedFile(
             $tempPath,
             pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME).'.jpg',

@@ -141,7 +141,7 @@
                             </a>
                             @endif
                             @if($member['social_media']['whatsapp'] ?? false)
-                            <a href="{{ $member['social_media']['whatsapp'] }}" target="_blank" class="text-muted">
+                            <a href="@waUrl($member['social_media']['whatsapp'])" target="_blank" rel="noopener" class="text-muted">
                                 <i class="fab fa-whatsapp"></i>
                             </a>
                             @endif

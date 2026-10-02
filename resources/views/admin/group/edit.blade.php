@@ -40,7 +40,7 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="nim" class="form-label">NIM *</label>
-                                    <input type="text" class="form-control" id="nim" name="nim" value="{{ old('nim', $member['nim'] ?? '') }}" required {{ isset($member) ? 'readonly' : '' }}>
+                                    <input type="text" class="form-control" id="nim" name="nim" value="{{ old('nim', $member['nim'] ?? '') }}" required>
                                 </div>
                             </div>
 

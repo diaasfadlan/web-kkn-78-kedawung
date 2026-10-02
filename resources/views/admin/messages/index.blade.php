@@ -36,12 +36,12 @@
                                 <th>Pengirim</th>
                                 <th>Subjek</th>
                                 <th>Pesan</th>
-                                <th class="text-center" style="width: 120px;">Aksi</th>
+                                <th class="text-center" style="width: 140px;">Status / Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($messages as $message)
-                            <tr>
+                            <tr class="{{ ($message['is_read'] ?? false) ? '' : 'table-warning' }}">
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
                                     <small class="text-muted d-block">
@@ -55,24 +55,36 @@
                                     <strong>{{ $message['name'] ?? 'Anonim' }}</strong><br>
                                     <small><a href="mailto:{{ $message['email'] ?? '' }}" class="text-decoration-none text-muted"><i class="fas fa-envelope"></i> {{ $message['email'] ?? '-' }}</a></small>
                                     @if(!empty($message['phone']))
-                                        <br><small><a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $message['phone']) }}" target="_blank" class="text-success text-decoration-none"><i class="fab fa-whatsapp"></i> {{ $message['phone'] }}</a></small>
+                                        <br><small><a href="@waUrl($message['phone'])" target="_blank" rel="noopener" class="text-success text-decoration-none"><i class="fab fa-whatsapp"></i> {{ $message['phone'] }}</a></small>
                                     @endif
                                 </td>
                                 <td>
-                                    <span class="badge bg-secondary mb-1">Subjek</span><br>
+                                    <span class="badge {{ ($message['is_read'] ?? false) ? 'bg-secondary' : 'bg-primary' }} mb-1">
+                                        {{ ($message['is_read'] ?? false) ? 'Dibaca' : 'Pesan Baru' }}
+                                    </span><br>
                                     <strong>{{ $message['subject'] ?? '-' }}</strong>
                                 </td>
                                 <td>
                                     <p class="mb-0 text-muted small" style="white-space: pre-wrap; max-width: 380px;">{{ $message['message'] ?? '-' }}</p>
                                 </td>
                                 <td class="text-center">
-                                    <form action="{{ route('admin.messages.destroy', $message['id'] ?? '') }}" method="POST" onsubmit="return confirm('Hapus pesan ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus Pesan">
-                                            <i class="fas fa-trash"></i> Hapus
-                                        </button>
-                                    </form>
+                                    <div class="d-flex flex-column gap-1">
+                                        <form action="{{ route('admin.messages.toggle-read', $message['id'] ?? '') }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="submit" class="btn btn-sm {{ ($message['is_read'] ?? false) ? 'btn-outline-secondary' : 'btn-success' }} w-100 py-1" title="Klik untuk ubah status">
+                                                <i class="fas {{ ($message['is_read'] ?? false) ? 'fa-envelope-open' : 'fa-envelope' }} me-1"></i>
+                                                {{ ($message['is_read'] ?? false) ? 'Tandai Baru' : 'Tandai Dibaca' }}
+                                            </button>
+                                        </form>
+                                        <form action="{{ route('admin.messages.destroy', $message['id'] ?? '') }}" method="POST" onsubmit="return confirm('Hapus pesan ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-outline-danger w-100 py-1" title="Hapus Pesan">
+                                                <i class="fas fa-trash"></i> Hapus
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                             @empty

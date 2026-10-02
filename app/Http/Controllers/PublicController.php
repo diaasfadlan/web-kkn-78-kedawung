@@ -23,7 +23,13 @@ class PublicController extends Controller
         $members = $this->firebase->getCollection('members', 6);
         $workPrograms = $this->firebase->getCollection('work_programs');
         $articles = $this->firebase->getCollection('articles');
-        $featuredGalleries = $this->firebase->getCollection('galleries', 8);
+        $galleries = $this->firebase->getCollection('galleries');
+
+        // Urutkan galeri dari yang paling baru
+        usort($galleries, function ($a, $b) {
+            return strcmp((string) ($b['created_at'] ?? ''), (string) ($a['created_at'] ?? ''));
+        });
+        $featuredGalleries = array_slice($galleries, 0, 8);
 
         // Urutkan artikel dari yang paling baru
         usort($articles, function ($a, $b) {

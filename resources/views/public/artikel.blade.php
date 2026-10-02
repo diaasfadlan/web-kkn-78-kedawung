@@ -105,10 +105,10 @@ function filterArtikel() {
 
     document.querySelectorAll('.artikel-item').forEach(item => {
         const title = item.getAttribute('data-title');
-        const itemKategori = item.getAttribute('data-kategori');
-        
+        const itemKategori = (item.getAttribute('data-kategori') || '').toLowerCase();
+
         const matchSearch = title.includes(searchText);
-        const matchKategori = kategori === '' || itemKategori === kategori;
+        const matchKategori = kategori === '' || itemKategori === kategori.toLowerCase();
         
         if (matchSearch && matchKategori) {
             item.style.display = 'block';

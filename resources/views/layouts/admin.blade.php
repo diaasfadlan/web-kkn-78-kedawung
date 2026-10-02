@@ -38,7 +38,14 @@
                         <li class="nav-item"><a class="nav-link {{ request()->routeIs('gallery.*') ? 'active' : '' }}" href="{{ route('gallery.index') }}">Galeri</a></li>
                         <li class="nav-item"><a class="nav-link {{ request()->routeIs('timeline.*') ? 'active' : '' }}" href="{{ route('timeline.index') }}">Timeline</a></li>
                         <li class="nav-item"><a class="nav-link {{ request()->routeIs('group.index', 'group.create', 'group.edit') ? 'active' : '' }}" href="{{ route('group.index') }}">Anggota</a></li>
-                        <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.messages*') ? 'active' : '' }}" href="{{ route('admin.messages') }}"><i class="fa-solid fa-envelope me-1"></i> Pesan</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('admin.messages*') ? 'active' : '' }}" href="{{ route('admin.messages') }}">
+                                <i class="fa-solid fa-envelope me-1"></i> Pesan
+                                @if(($unreadMessagesCount ?? 0) > 0)
+                                    <span class="badge bg-danger rounded-pill ms-1">{{ $unreadMessagesCount }}</span>
+                                @endif
+                            </a>
+                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle {{ request()->routeIs('village.*', 'contact.*', 'group.setting*') ? 'active' : '' }}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Pengaturan</a>
                             <ul class="dropdown-menu">

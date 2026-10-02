@@ -409,21 +409,14 @@ class FirebaseService
     private function cachedCollection(string $collection, bool $includeStale = true): ?array
     {
         $cache = Cache::store('file');
+        $key = $this->collectionCacheKey($collection, null);
 
-        foreach (self::COLLECTION_LIMITS as $limit) {
-            $key = $this->collectionCacheKey($collection, $limit);
-            if ($cache->has($key)) {
-                return $cache->get($key);
-            }
+        if ($cache->has($key)) {
+            return $cache->get($key);
         }
 
-        if ($includeStale) {
-            foreach (self::COLLECTION_LIMITS as $limit) {
-                $key = $this->collectionCacheKey($collection, $limit);
-                if ($cache->has($this->staleCacheKey($key))) {
-                    return $cache->get($this->staleCacheKey($key));
-                }
-            }
+        if ($includeStale && $cache->has($this->staleCacheKey($key))) {
+            return $cache->get($this->staleCacheKey($key));
         }
 
         return null;

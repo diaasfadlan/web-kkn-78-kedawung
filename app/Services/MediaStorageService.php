@@ -32,42 +32,53 @@ class MediaStorageService
             ];
         }
 
-        $response = $this->http->post($this->uploadEndpoint(), [
-            'auth' => [
-                $this->apiKey(),
-                $this->apiSecret(),
-            ],
-            'multipart' => [
-                [
-                    'name' => 'file',
-                    'contents' => fopen($file->getRealPath(), 'r'),
-                    'filename' => $filename,
-                    'headers' => [
-                        'Content-Type' => $file->getMimeType() ?: 'application/octet-stream',
+        try {
+            $response = $this->http->post($this->uploadEndpoint(), [
+                'auth' => [
+                    $this->apiKey(),
+                    $this->apiSecret(),
+                ],
+                'multipart' => [
+                    [
+                        'name' => 'file',
+                        'contents' => fopen($file->getRealPath(), 'r'),
+                        'filename' => $filename,
+                        'headers' => [
+                            'Content-Type' => $file->getMimeType() ?: 'application/octet-stream',
+                        ],
+                    ],
+                    [
+                        'name' => 'public_id',
+                        'contents' => $publicId,
+                    ],
+                    [
+                        'name' => 'overwrite',
+                        'contents' => 'false',
+                    ],
+                    [
+                        'name' => 'resource_type',
+                        'contents' => 'image',
                     ],
                 ],
-                [
-                    'name' => 'public_id',
-                    'contents' => $publicId,
-                ],
-                [
-                    'name' => 'overwrite',
-                    'contents' => 'false',
-                ],
-                [
-                    'name' => 'resource_type',
-                    'contents' => 'image',
-                ],
-            ],
-        ]);
+            ]);
 
-        $payload = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+            $payload = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
-        return [
-            'path' => $payload['public_id'],
-            'public_id' => $payload['public_id'],
-            'url' => $payload['secure_url'],
-        ];
+            return [
+                'path' => $payload['public_id'],
+                'public_id' => $payload['public_id'],
+                'url' => $payload['secure_url'],
+            ];
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Cloudinary upload failed, falling back to local storage: '.$e->getMessage());
+            $storedPath = Storage::disk('public')->putFileAs(trim($directory, '/'), $file, $filename);
+
+            return [
+                'path' => $storedPath,
+                'public_id' => null,
+                'url' => asset('storage/'.$storedPath),
+            ];
+        }
     }
 
     public function isCloudinaryConfigured(): bool

@@ -62,7 +62,7 @@
                     </a>
                     @endif
                     @if($contact['whatsapp'] ?? false)
-                    <a href="{{ $contact['whatsapp'] }}" target="_blank" class="btn btn-outline-success">
+                    <a href="@waUrl($contact['whatsapp'])" target="_blank" rel="noopener" class="btn btn-outline-success">
                         <i class="fab fa-whatsapp"></i> WhatsApp
                     </a>
                     @endif
@@ -78,8 +78,14 @@
             <div class="col-lg-6">
                 <h2 class="mb-4">Lokasi Kami</h2>
                 @if($contact['map_url'] ?? false)
+                @php
+                    $contactMapUrl = $contact['map_url'];
+                    if (str_contains($contactMapUrl, 'google.com/maps') && !str_contains($contactMapUrl, 'output=embed') && !str_contains($contactMapUrl, '/embed')) {
+                        $contactMapUrl .= (str_contains($contactMapUrl, '?') ? '&' : '?') . 'output=embed';
+                    }
+                @endphp
                 <div class="ratio ratio-16x9 rounded-3 overflow-hidden shadow">
-                    <iframe src="{{ $contact['map_url'] }}" allowfullscreen="" loading="lazy"></iframe>
+                    <iframe src="{{ $contactMapUrl }}" allowfullscreen="" loading="lazy"></iframe>
                 </div>
                 @else
                 <div class="alert alert-info">

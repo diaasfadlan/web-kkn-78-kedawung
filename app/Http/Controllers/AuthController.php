@@ -16,6 +16,10 @@ class AuthController extends Controller
 
     public function showLoginForm()
     {
+        if (session('firebase_token')) {
+            return redirect()->route('admin.dashboard');
+        }
+
         return view('auth.login');
     }
 

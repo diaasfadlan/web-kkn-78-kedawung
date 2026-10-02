@@ -23,9 +23,9 @@
             <div class="col-lg-6">
                 @php
                     $customHeroPath = 'images/hero-main.jpg';
-                    $heroImageUrl = file_exists(public_path($customHeroPath))
-                        ? asset($customHeroPath)
-                        : ($groupProfile['photo_url'] ?? null);
+                    $heroImageUrl = !empty($groupProfile['photo_url'])
+                        ? $groupProfile['photo_url']
+                        : (file_exists(public_path($customHeroPath)) ? asset($customHeroPath) : null);
                 @endphp
                 <div class="hero-art" aria-label="Dokumentasi kelompok KKN">
                     <div class="hero-sticker top">Turun tangan, bukan sekadar wacana!</div>
@@ -298,7 +298,7 @@
                 <i class="fas fa-images"></i> Galeri
             </a>
             <a href="{{ route('timeline') }}" class="btn btn-light">
-                <i class="fas fa-timeline"></i> Timeline
+                <i class="fas fa-clock-rotate-left"></i> Timeline
             </a>
             <a href="{{ route('kontak') }}" class="btn btn-light">
                 <i class="fas fa-envelope"></i> Hubungi Kami

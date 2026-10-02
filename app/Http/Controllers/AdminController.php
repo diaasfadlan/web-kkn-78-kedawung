@@ -75,4 +75,24 @@ class AdminController extends Controller
             return back()->with('error', 'Gagal menghapus pesan: '.$e->getMessage());
         }
     }
+
+    /**
+     * Toggle read / unread status of a message
+     */
+    public function toggleMessageRead(string $id): \Illuminate\Http\RedirectResponse
+    {
+        try {
+            $message = $this->firebase->getDocument('messages', $id);
+            if ($message) {
+                $isRead = ! ($message['is_read'] ?? false);
+                $this->firebase->updateDocument('messages', $id, ['is_read' => $isRead]);
+            }
+
+            return back()->with('success', 'Status pesan diperbarui.');
+        } catch (\Throwable $e) {
+            report($e);
+
+            return back()->with('error', 'Gagal memperbarui status: '.$e->getMessage());
+        }
+    }
 }
