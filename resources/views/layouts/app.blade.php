@@ -37,11 +37,8 @@
             <div class="container">
                 <a class="navbar-brand" href="{{ route('home') }}" aria-label="KKN 078 Kedawung - Beranda">
                     <span class="brand-mark">
-                        @if(file_exists(public_path('images/logo-kkn.png')))
-                            <img src="{{ asset('images/logo-kkn.png') }}" alt="Logo KKN 078 Kedawung">
-                        @else
-                            <i class="fa-solid fa-hand-fist" aria-hidden="true"></i>
-                        @endif
+                        <img src="{{ asset('images/logo-kkn.png') }}" alt="Logo KKN 078 Kedawung" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+                        <i class="fa-solid fa-hand-fist" aria-hidden="true" style="display: none;"></i>
                     </span>
                     <span>KKN 078 KEDAWUNG</span>
                 </a>

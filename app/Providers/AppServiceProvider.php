@@ -28,7 +28,7 @@ HTML;
         });
 
         \Illuminate\Support\Facades\Blade::directive('waUrl', function ($expression) {
-            return "<?php echo (str_starts_with((string) ({$expression}), 'http') ? {$expression} : 'https://wa.me/' . preg_replace('/^0/', '62', preg_replace('/\\D/', '', (string) ({$expression})))); ?>";
+            return "<?php \$rawWa = trim((string) ({$expression})); \$cleanWa = preg_replace('/\\D/', '', \$rawWa); echo (str_starts_with(\$rawWa, 'http') ? \$rawWa : (\$cleanWa !== '' ? 'https://wa.me/' . preg_replace('/^0/', '62', \$cleanWa) : '#')); ?>";
         });
 
         // ponytail: view composer caches Firebase read inside FirebaseService memory/file cache
@@ -43,8 +43,14 @@ HTML;
 
         \Illuminate\Support\Facades\View::composer('layouts.admin', function ($view) {
             try {
-                $messages = app(\App\Services\FirebaseService::class)->getCollection('messages');
-                $unread = count(array_filter($messages, fn ($m) => ! ($m['is_read'] ?? false)));
+                $unread = \Illuminate\Support\Facades\Cache::store('file')->remember(
+                    'admin_unread_messages_count',
+                    300,
+                    function () {
+                        $messages = app(\App\Services\FirebaseService::class)->getCollection('messages');
+                        return count(array_filter($messages, fn ($m) => ! ($m['is_read'] ?? false)));
+                    }
+                );
                 $view->with('unreadMessagesCount', $unread);
             } catch (\Throwable) {
                 $view->with('unreadMessagesCount', 0);

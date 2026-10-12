@@ -81,12 +81,31 @@ class PublicController extends Controller
             'PDD' => ['PDD', 'DOKUMENTASI', 'PUBLIKASI', 'DIVISI PDD'],
         ];
 
-        $organization = collect($positionAliases)->map(function (array $aliases) use ($members): array {
-            return collect($members)->filter(function (array $member) use ($aliases): bool {
+        $matchedMemberIds = [];
+        $organization = [];
+        foreach ($positionAliases as $key => $aliases) {
+            $matched = collect($members)->filter(function (array $member) use ($aliases, &$matchedMemberIds): bool {
                 $pos = mb_strtoupper(trim((string) ($member['position'] ?? '')));
-                return in_array($pos, $aliases, true);
+                if (in_array($pos, $aliases, true)) {
+                    $matchedMemberIds[] = $member['id'] ?? null;
+                    return true;
+                }
+                return false;
             })->values()->all();
-        })->all();
+
+            $organization[$key] = $matched;
+        }
+
+        $others = collect($members)->filter(function (array $member) use ($matchedMemberIds): bool {
+            return !in_array($member['id'] ?? null, $matchedMemberIds, true);
+        })->groupBy(function (array $member): string {
+            $pos = trim((string) ($member['position'] ?? ''));
+            return $pos !== '' ? mb_strtoupper($pos) : 'ANGGOTA';
+        });
+
+        foreach ($others as $posName => $otherMembers) {
+            $organization[$posName] = $otherMembers->values()->all();
+        }
 
         return view('public.profil-kelompok', [
             'group' => $groupProfile,

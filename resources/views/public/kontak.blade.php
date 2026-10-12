@@ -87,6 +87,11 @@
                 <div class="ratio ratio-16x9 rounded-3 overflow-hidden shadow">
                     <iframe src="{{ $contactMapUrl }}" allowfullscreen="" loading="lazy"></iframe>
                 </div>
+                <div class="mt-2 text-end">
+                    <a href="{{ $contact['map_url'] }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary">
+                        <i class="fa-solid fa-arrow-up-right-from-square me-1"></i> Buka di Google Maps
+                    </a>
+                </div>
                 @else
                 <div class="alert alert-info">
                     <p>Peta lokasi belum tersedia</p>

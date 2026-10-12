@@ -246,7 +246,7 @@
                         <span class="team-ring"></span>
                         <span class="team-clip"></span>
                     </div>
-                    <a href="{{ route('profil-kelompok.detail', $member['id']) }}" class="team-id-badge" aria-label="Lihat profil {{ $member['name'] ?? 'anggota' }}">
+                    <a href="{{ !empty($member['id']) ? route('profil-kelompok.detail', $member['id']) : '#' }}" class="team-id-badge" aria-label="Lihat profil {{ $member['name'] ?? 'anggota' }}">
                         <span class="team-card-slot" aria-hidden="true"></span>
                         <header class="team-id-header">
                             <span>KKN<span>.</span>KARYA</span>

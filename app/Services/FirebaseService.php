@@ -9,7 +9,7 @@ use Throwable;
 
 class FirebaseService
 {
-    private const COLLECTION_LIMITS = [null, 3, 6, 8];
+    private const COLLECTION_LIMITS = [null, 3, 4, 5, 6, 8, 10];
 
     protected mixed $firestore = null;
 
@@ -152,6 +152,9 @@ class FirebaseService
                 config('firebase.cache_ttl', 300),
                 function () use ($cache, $collection, $limit): array {
                     $query = $this->firestore()->collection($collection);
+                    if ($limit !== null) {
+                        $query = $query->limit($limit);
+                    }
                     $documents = $query->documents($this->readOptions([
                         'maxRetries' => 0,
                     ]));
@@ -164,10 +167,14 @@ class FirebaseService
                             $data[] = $docData;
                         }
                     }
-                    $this->cacheCollection($collection, $data);
+                    if ($limit === null) {
+                        $this->cacheCollection($collection, $data);
+                    } else {
+                        $this->cacheCollectionVariant($collection, $limit, $data);
+                    }
                     $cache->forget($this->circuitCacheKey());
 
-                    return $limit === null ? $data : array_slice($data, 0, $limit);
+                    return $data;
                 }
             );
         } catch (Throwable $e) {
@@ -276,6 +283,10 @@ class FirebaseService
             $cache->forget($this->staleCacheKey($key));
         }
 
+        if ($collection === 'messages') {
+            $cache->forget('admin_unread_messages_count');
+        }
+
         // A successful write proves Firebase is reachable again. Do not let
         // an earlier read failure hide the newly written data on redirect.
         $this->readCircuitOpen = false;
@@ -342,6 +353,7 @@ class FirebaseService
 
         $this->cacheDocument($collection, $documentId, $document);
         $this->cacheCollection($collection, $documents);
+        $this->invalidateCollectionExtras($collection);
         $this->closeReadCircuit();
     }
 
@@ -372,6 +384,7 @@ class FirebaseService
 
         $this->cacheDocument($collection, $documentId, $document);
         $this->cacheCollection($collection, array_values($documents));
+        $this->invalidateCollectionExtras($collection);
         $this->closeReadCircuit();
     }
 
@@ -387,7 +400,15 @@ class FirebaseService
             fn (array $item): bool => ($item['id'] ?? null) !== $documentId
         ));
         $this->cacheCollection($collection, $documents);
+        $this->invalidateCollectionExtras($collection);
         $this->closeReadCircuit();
+    }
+
+    private function invalidateCollectionExtras(string $collection): void
+    {
+        if ($collection === 'messages') {
+            Cache::store('file')->forget('admin_unread_messages_count');
+        }
     }
 
     private function cacheCollection(string $collection, array $documents): void

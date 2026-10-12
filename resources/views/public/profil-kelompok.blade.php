@@ -80,7 +80,7 @@
                     </div>
                     <div class="card-body organization-card-body">
                         @forelse($positionMembers as $organizationMember)
-                            <a href="{{ route('profil-kelompok.detail', $organizationMember['id']) }}" class="organization-member">
+                            <a href="{{ !empty($organizationMember['id']) ? route('profil-kelompok.detail', $organizationMember['id']) : '#' }}" class="organization-member">
                                 <div class="organization-photo">
                                     @if($organizationMember['photo_url'] ?? false)
                                         <img src="{{ $organizationMember['photo_url'] }}" alt="Foto {{ $organizationMember['name'] ?? 'anggota' }}" loading="lazy" decoding="async">
@@ -112,7 +112,7 @@
             @forelse($members as $member)
             <div class="col-md-6 col-lg-4 page-card-item">
                 <div class="card h-100 text-center member-preview-card">
-                    <a href="{{ route('profil-kelompok.detail', $member['id']) }}" class="member-card-main" aria-label="Lihat profil {{ $member['name'] ?? 'anggota' }}">
+                    <a href="{{ !empty($member['id']) ? route('profil-kelompok.detail', $member['id']) : '#' }}" class="member-card-main" aria-label="Lihat profil {{ $member['name'] ?? 'anggota' }}">
                     @if($member['photo_url'] ?? false)
                     <img src="{{ $member['photo_url'] }}" class="card-img-top member-list-photo" alt="{{ $member['name'] }}" loading="lazy" decoding="async">
                     @else
